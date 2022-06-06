@@ -1,0 +1,18 @@
+diff --git a/node_modules/@worldcoin/world-id-contracts/src/Semaphore.sol b/node_modules/@worldcoin/world-id-contracts/src/Semaphore.sol
+index cdae393..362056b 100644
+--- a/node_modules/@worldcoin/world-id-contracts/src/Semaphore.sol
++++ b/node_modules/@worldcoin/world-id-contracts/src/Semaphore.sol
+@@ -1,10 +1,10 @@
+ // SPDX-License-Identifier: MIT
+ pragma solidity ^0.8.10;
+ 
+-import { Verifier } from 'semaphore/base/Verifier.sol';
++import { Verifier } from '@appliedzkp/semaphore-contracts/base/Verifier.sol';
+ import { IWorldID } from './interfaces/IWorldID.sol';
+-import { SemaphoreCore } from 'semaphore/base/SemaphoreCore.sol';
+-import { SemaphoreGroups } from 'semaphore/base/SemaphoreGroups.sol';
++import { SemaphoreCore } from '@appliedzkp/semaphore-contracts/base/SemaphoreCore.sol';
++import { SemaphoreGroups } from '@appliedzkp/semaphore-contracts/base/SemaphoreGroups.sol';
+ import {
+     IncrementalBinaryTree,
+     IncrementalTreeData
