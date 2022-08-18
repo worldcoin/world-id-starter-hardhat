@@ -16,7 +16,7 @@ The action ID (also called "external nullifier") makes sure that the proof your 
 
 ### Setting your signal
 
-The signal adds an additional layer of protection to the World ID Proof, it makes sure that the input provided to the contract is the one the person who generated the proof intended (more on [signals](https://id.worldcoin.org/docs/about/glossary#signal)). By default this contract expects an address (`receiver`), but you can update it to be any arbitrary string.
+The signal adds an additional layer of protection to the World ID ZKP, it makes sure that the input provided to the contract is the one the person who generated the proof intended (more on [signals](https://id.worldcoin.org/docs/about/glossary#signal)). By default this contract expects an address (`receiver`), but you can update it to be any arbitrary string.
 
 To update the signal, you should change the `input` on the `abi.encodePacked(input).hashToField()` line. You should provide the exact same string when initializing the JS widget, to make sure the proof includes them.
 
@@ -34,7 +34,15 @@ If your use-case doesn't require uniqueness, you can use them as "anonymous iden
 
 2. Use the [JS widget](https://id.worldcoin.org/docs/js) to prompt the user with verification (make sure you're providing the correct [signal](#setting-your-signal) and [action ID](#setting-your-action-id)). Upon acceptance, you'll get a `merkle_root`, `nullifier_hash` and `proof`.
 
-3. Use the obtained parameters, along with any inputs your contract needs (which [should be included in the signal](#setting-your-signal)), to call your smart contract!
+3. The ZKP (attribute `proof`) is a `uint256[8]` array and your smart contract expects it that way. For easier handling, the JS widget will return the proof encoded. Unpack your proof before sending it to your smart contract. 
+
+```js
+import { defaultAbiCoder as abi } from "@ethers/utils";
+const unpackedProof = abi.decode(["uint256[8]"], proof)[0];
+// You can now pass your unpackedProof to your smart contract
+```
+
+4. Use the obtained parameters, along with any inputs your contract needs (which [should be included in the signal](#setting-your-signal)), to call your smart contract!
 
 ## 🧑‍💻 Development & testing
 
