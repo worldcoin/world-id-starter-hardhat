@@ -5,6 +5,11 @@ module.exports = {
         mocha: true,
         node: true,
     },
+    settings: {
+        node: {
+            tryExtensions: ['.js', '.jsx', '.ts', '.tsx'],
+        },
+    },
     plugins: ['@typescript-eslint'],
     extends: ['standard', 'plugin:node/recommended', 'prettier'],
     parser: '@typescript-eslint/parser',
