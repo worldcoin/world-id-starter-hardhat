@@ -1,6 +1,5 @@
 # World ID Starter Kit (Smart Contracts w/ Hardhat)
 
-
 **Easiest** way to get started with World ID **on-chain**. This repository contains the minimum requirements to build web3 dApps with [World ID](#-about-world-id), allowing you to easily add sybil-resistance and uniqueness features to your dApp.
 
 > This repository contains the smart contract code, and is built with the [Hardhat](https://hardhat.org) toolkit. We also have a Foundry version in the [world-id-starter](https://github.com/worldcoin/world-id-starter) repository.
@@ -23,13 +22,11 @@ To update the signal, you should change the `input` on the `abi.encodePacked(inp
 
 > Note: The `hashToField` part is really important, as validation will fail otherwise even with the right parameters. Make sure to include it!
 
-
 ### About nullifiers
 
 _Nullifiers_ are what enforces uniqueness in World ID. You can generate multiple proofs for a given signal and action ID, but they will all have the same nullifier. Note how, in the `verifyAndExecute` function we first check if the given nullifier has already been used (and revert if so), then mark it as used after the proof is verified.
 
 If your use-case doesn't require uniqueness, you can use them as "anonymous identifiers", linking users between different signals (for example, allowing them to change which address they've verified in a social network). To do this, update the `nullifierHashes` mapping to point to some sort of identifier instead of a boolean. See [this project](https://github.com/m1guelpf/lens-humancheck/blob/main/src/HumanCheck.sol) as an example.
-
 
 ## 🗝 Usage instructions
 
@@ -52,7 +49,6 @@ This repository includes automated tests, which you can use to make sure your co
 If you've changed the type of the external nullifier, or the signal, you should look over the `src/test/helpers/InteractsWithWorldID.ts` file and update them there as well.
 
 Once you've done this, you can run the tests with `npm run test`.
-
 
 <!-- WORLD-ID-SHARED-README-TAG:START - Do not remove or modify this section directly -->
 <!-- WORLD-ID-SHARED-README-TAG:END -->

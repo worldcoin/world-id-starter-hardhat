@@ -7,8 +7,8 @@ module.exports = {
     },
     settings: {
         node: {
-            tryExtensions: [".js", ".jsx", ".ts", ".tsx"]
-        }
+            tryExtensions: ['.js', '.jsx', '.ts', '.tsx'],
+        },
     },
     plugins: ['@typescript-eslint'],
     extends: ['standard', 'plugin:node/recommended', 'prettier'],
