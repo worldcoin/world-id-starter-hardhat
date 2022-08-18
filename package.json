@@ -46,7 +46,11 @@
     },
     "scripts": {
         "test": "hardhat test",
-        "postinstall": "patch-package"
+        "postinstall": "patch-package",
+        "format": "prettier -w ./",
+        "format:check": "prettier --check ./",
+        "lint": "eslint --ext .tsx,.ts,.js,.jsx ./",
+        "typecheck": "tsc --noEmit --emitDeclarationOnly false --declaration false"
     },
     "config": {
         "paths": {
