@@ -52,7 +52,7 @@
         "format:check": "prettier --check ./",
         "lint": "eslint --ext .tsx,.ts,.js,.jsx ./",
         "typecheck": "tsc --noEmit --emitDeclarationOnly false --declaration false",
-        "spellcheck": "cspell **/*.{ts,js,tsx,json} -e **/dist/ -e **/node_modules/ -e /node_modules/"
+        "spellcheck": "cspell **/*.{ts,js,tsx,json} -e **/node_modules/ -e /node_modules/"
     },
     "config": {
         "paths": {
