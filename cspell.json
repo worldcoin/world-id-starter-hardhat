@@ -17,12 +17,15 @@
         "appliedzkp",
         "blockhash",
         "bytecode",
+        "circomlibjs",
         "ethersproject",
         "groth",
         "hasher",
+        "keccak",
         "merkle",
         "nomiclabs",
         "numberish",
-        "worldcoin"
+        "worldcoin",
+        "zkey"
     ]
 }
