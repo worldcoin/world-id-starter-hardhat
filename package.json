@@ -38,7 +38,7 @@
         "@worldcoin/world-id-contracts": "^0.1.1",
         "@zk-kit/identity": "^1.4.1",
         "@zk-kit/protocols": "^1.11.1",
-        "circomlibjs": "^0.1.2",
+        "circomlibjs": "^0.1.7",
         "download": "^8.0.0",
         "patch-package": "^6.4.7"
     },
