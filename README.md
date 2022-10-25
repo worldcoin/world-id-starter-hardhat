@@ -1,26 +1,34 @@
 # World ID Starter Kit (Smart Contracts w/ Hardhat)
 
-This repository contains the bare minimum required to build apps with [World ID](https://id.worlcoin.org), allowing you to add sybil-resistance and uniqueness features to your dApp in minutes instead of months.
+**Easiest** way to get started with World ID **on-chain**. This repository contains the minimum requirements to build web3 dApps with [World ID](#-about-world-id), allowing you to easily add sybil-resistance and uniqueness features to your dApp.
 
-> World ID is a mechanism to verify a single human has performed a specific action only once without exposing any personal information.
+> This repository contains the smart contract code, and is built with the [Hardhat](https://hardhat.org) toolkit. We also have a Foundry version in the [world-id-starter](https://github.com/worldcoin/world-id-starter) repository.
 
-This repository contains the smart contract code, and is built with the [Hardhat](https://hardhat.org) toolkit. We'll share additional starter kits for other toolkits soon!
-
-## 📄 Documentation
+## 🏃 Getting started
 
 Start with the `verifyAndExecute` function on the [`Contract.sol`](contracts/Contract.sol) file, which contains the basic World ID logic. You can rename this function as you choose (for example, we use `claim` on our airdrop example).
 
-### Updating the signal
+### Setting your Action ID
 
-The input accepted by this contract is an address (`receiver`) by default, but you can update it to be as many parameters as you need, of any type.
+The action ID (also called "external nullifier") makes sure that the proof your contract receives was generated for it (more on [Action IDs](https://id.worldcoin.org/docs/about/glossary#action-id)).
 
-Next, you'll need to update the `signal`. The signal provides the "uniqueness" part of World ID, as it ensures your contract will only accept one proof per person-signal combination, and it makes sure that the input provided to the contract is the one the person who generated the proof intended.
+> Note: Make sure you're passing the correct Action ID when initializing the JS widget! The generated proof will be invalid otherwise.
 
-To update the signal, you should change the `abi.encodePacked(input).hashToField()` line to include all your parameters inside the `encodePacked` call. For example, if I wanted not only a receiver receiver but also an `uint256` id, I'd use `abi.encodePacked(receiver, id).hashToField()`. You should provide these same parameters when initializing the JavaScript SDK, to make sure the proof includes them.
+### Setting your signal
+
+The signal adds an additional layer of protection to the World ID ZKP, it makes sure that the input provided to the contract is the one the person who generated the proof intended (more on [signals](https://id.worldcoin.org/docs/about/glossary#signal)). By default this contract expects an address (`receiver`), but you can update it to be any arbitrary string.
+
+To update the signal, you should change the `input` on the `abi.encodePacked(input).hashToField()` line. You should provide the exact same string when initializing the JS widget, to make sure the proof includes them.
 
 > Note: The `hashToField` part is really important, as validation will fail otherwise even with the right parameters. Make sure to include it!
 
-### Updating the external nullifier
+### About nullifiers
+
+_Nullifiers_ are what enforces uniqueness in World ID. You can generate multiple proofs for a given signal and action ID, but they will all have the same nullifier. Note how, in the `verifyAndExecute` function we first check if the given nullifier has already been used (and revert if so), then mark it as used after the proof is verified.
+
+If your use-case doesn't require uniqueness, you can use them as "anonymous identifiers", linking users between different signals (for example, allowing them to change which address they've verified in a social network). To do this, update the `nullifierHashes` mapping to point to some sort of identifier instead of a boolean. See [this project](https://github.com/m1guelpf/lens-humancheck/blob/main/src/HumanCheck.sol) as an example.
+
+## Advanced: Supporting multiple actions
 
 The external nullifier makes sure that the proof your contract receives was generated for it, and not for a different contract using the same signal. Unless your use-case requires users to perform more than one WorldID action (claiming multiple airdrops that live in the same contract, for example, instead of a single one), you should use an Action ID, which you can obtain from the [WorldID Dev Portal](https://developer.worldcoin.org).
 
@@ -50,21 +58,21 @@ function claimAirdrop(
 
 ```
 
-> Note: Make sure you're passing the correct action id when initializing the JavaScript SDK! The generated proof will be invalid otherwise.
-
-### About nullifiers
-
-_Nullifiers_ are what enforces uniqueness in World ID. You can generate multiple proofs for a given signal and external nullifier, but they will all have the same nullifier. Note how, in the `verifyAndExecute` function we first check if the given nullifier has already been used (and revert if so), then mark it as used after the proof is verified.
-
-If your use-case doesn't require uniqueness, you can use them as "anonymous identifiers", linking users between different signals (for example, allowing them to change which address they've verified in a social network). To do this, update the `nullifierHashes` mapping to point to some sort of identifier instead of a boolean. See [this project](https://github.com/m1guelpf/lens-humancheck/blob/main/src/HumanCheck.sol) as an example.
-
 ## 🗝 Usage instructions
 
-1. End users will need a verified identity, which can be obtained through our [identity faucet](https://mock-app.id.worldcoin.org) ([see docs for more info](https://id.worldcoin.org/test)). In production, this would be obtained by verifying with an orb.
+1. End users will need a verified identity, which can be obtained through our [Simulator](https://simulator.worldcoin.org) ([see docs for more info](https://id.worldcoin.org/test)). In production, this would be obtained by verifying with an orb.
 
-2. Use the [WorldID JavaScript SDK](https://id.worldcoin.org/docs/js) to prompt the user with verification (make sure you're providing the correct [signal](#updating-the-signal) and [external nullifier](#updating-the-external-nullifier)). Upon acceptance, you'll get a `merkleRoot`, `nullifierHash` and `proof`.
+2. Use the [JS widget](https://id.worldcoin.org/docs/js) to prompt the user with verification (make sure you're providing the correct [signal](#setting-your-signal) and [action ID](#setting-your-action-id)). Upon acceptance, you'll get a `merkle_root`, `nullifier_hash` and `proof`.
 
-3. Use the obtained parameters, along with any inputs your contract needs (which [should be included in the signal](#updating-the-signal)), to call your smart contract!
+3. The ZKP (attribute `proof`) is a `uint256[8]` array and your smart contract expects it that way. For easier handling, the JS widget will return the proof encoded. Unpack your proof before sending it to your smart contract. 
+
+```js
+import { defaultAbiCoder as abi } from "@ethers/utils";
+const unpackedProof = abi.decode(["uint256[8]"], proof)[0];
+// You can now pass your unpackedProof to your smart contract
+```
+
+4. Use the obtained parameters, along with any inputs your contract needs (which [should be included in the signal](#setting-your-signal)), to call your smart contract!
 
 ## 🧑‍💻 Development & testing
 
@@ -72,7 +80,7 @@ This repository uses the [Hardhat](https://hardhat.org) smart contract toolkit. 
 
 Once you have node installed, you can run `npm install` from the base directory to install all dependencies, and run the automated tests with `npm run test`.
 
-### Running the tests
+### Running the test suite
 
 This repository includes automated tests, which you can use to make sure your contract is working as expected before deploying it. Of course, any modifications you've made to the `Contract.sol` file will need to be reflected on the tests as well to make them work.
 
@@ -80,6 +88,57 @@ If you've changed the type of the external nullifier, or the signal, you should 
 
 Once you've done this, you can run the tests with `npm run test`.
 
-## 🧑‍⚖️ License
+<!-- WORLD-ID-SHARED-README-TAG:START - Do not remove or modify this section directly -->
+<!-- The contents of this file are inserted to all World ID repositories to provide general context on World ID. -->
 
-This repository is licensed under the MIT License. For more information, check the [license file](LICENSE).
+## <img align="left" width="28" height="28" src="https://raw.githubusercontent.com/worldcoin/world-id-docs/main/public/images/shared-readme/readme-orb.png" alt="" style="margin-right: 0;" /> About World ID
+
+World ID is a protocol that lets you **prove a human is doing an action only once without revealing any personal data**. Stop bots, stop abuse.
+
+World ID uses a device called the [Orb](https://worldcoin.org/how-the-launch-works) which takes a picture of a person's iris to verify they are a unique and alive human. The protocol uses [Zero-knowledge proofs](https://id.worldcoin.org/zkp) so no traceable information is ever public.
+
+World ID is meant for on-chain web3 apps, traditional cloud applications, and even IRL verifications.
+
+<img src="https://raw.githubusercontent.com/worldcoin/world-id-docs/main/public/images/shared-readme/readme-diagram.png" alt="Diagram of how World ID works."  />
+
+### Getting started with World ID
+
+Regardless of how you landed here, the easiest way to get started with World ID is through the the [Dev Portal](https://developer.worldcoin.org).
+
+<a href="https://developer.worldcoin.org">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/worldcoin/world-id-docs/main/public/images/shared-readme/readme-get-started.png" alt="Get started" height="50" />
+</p>
+</a>
+
+### World ID Demos
+
+Want to see World ID in action? We have a bunch of [Examples](https://id.worldcoin.org/examples).
+
+<a href="https://id.worldcoin.org/examples">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/worldcoin/world-id-docs/main/public/images/shared-readme/readme-examples.png" alt="Click here to see examples" height="150" />
+</p>
+</a>
+
+## 📄 Documentation
+
+We have comprehensive docs for World ID at https://id.worldcoin.org/docs.
+
+<a href="https://id.worldcoin.org/docs">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/worldcoin/world-id-docs/main/public/images/shared-readme/readme-docs.png" alt="Visit documentation" height="50" />
+</p>
+</a>
+
+## 🗣 Feedback
+
+**World ID is in Beta, help us improve!** Please share feedback on your experience. You can find us on [Discord](https://discord.gg/worldcoin), look for the [#world-id](https://discord.com/channels/956750052771127337/968523914638688306) channel. You can also open an issue or a PR directly on this repo.
+
+<a href="https://discord.gg/worldcoin">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/worldcoin/world-id-docs/main/public/images/shared-readme/readme-discord.png" alt="Join Discord" height="50" />
+</p>
+</a>
+
+<!-- WORLD-ID-SHARED-README-TAG:END -->

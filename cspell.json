@@ -1,0 +1,31 @@
+{
+    "version": "0.2",
+    "enabled": true,
+    "language": "en-US",
+    "allowCompoundWords": true,
+    "dictionaries": ["typescript", "node", "npm", "html"],
+    "enabledLanguageIds": [
+        "typescript",
+        "typescriptreact",
+        "javascript",
+        "markdown",
+        "yaml",
+        "json"
+    ],
+    "words": [
+        "alphabeta",
+        "appliedzkp",
+        "blockhash",
+        "bytecode",
+        "circomlibjs",
+        "ethersproject",
+        "groth",
+        "hasher",
+        "keccak",
+        "merkle",
+        "nomiclabs",
+        "numberish",
+        "worldcoin",
+        "zkey"
+    ]
+}
