@@ -22,9 +22,35 @@ To update the signal, you should change the `abi.encodePacked(input).hashToField
 
 ### Updating the external nullifier
 
-The external nullifier makes sure that the proof your contract receives was generated for it, and not for a different contract using the same signal. A sensible default is to use the address of your contract (which will always be unique), but feel free to update if you have a unique use-case. You should be changing the `abi.encodePacked(address(this)).hashToField()` line, updating the parameters inside the `encodePacked` call.
+The external nullifier makes sure that the proof your contract receives was generated for it, and not for a different contract using the same signal. Unless your use-case requires users to perform more than one WorldID action (claiming multiple airdrops that live in the same contract, for example, instead of a single one), you should use an Action ID, which you can obtain from the [WorldID Dev Portal](https://developer.worldcoin.org).
 
-> Note: Make sure you're passing the correct external nullifier when initializing the JavaScript SDK! The generated proof will be invalid otherwise.
+For advanced use-cases, you can add additional arguments to the `abi.encodePacked` call to differentiate between actions, like so:
+
+```solidity
+function claimAirdrop(
+    uint256 airdropId,
+    address receiver,
+    uint256 root,
+    uint256 nullifierHash,
+    uint256[8] calldata proof
+) public {
+    // ...
+
+    worldId.verifyProof(
+        root,
+        groupId,
+        abi.encodePacked(input).hashToField(),
+        nullifierHash,
+        abi.encodePacked(actionId, airdropId).hashToField(),
+        proof
+    );
+
+    // ...
+}
+
+```
+
+> Note: Make sure you're passing the correct action id when initializing the JavaScript SDK! The generated proof will be invalid otherwise.
 
 ### About nullifiers
 
