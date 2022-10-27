@@ -10,7 +10,7 @@ Start with the `verifyAndExecute` function on the [`Contract.sol`](contracts/Con
 
 ### Setting your Action ID
 
-The action ID (also called "external nullifier") makes sure that the proof your contract receives was generated for it (more on [Action IDs](https://id.worldcoin.org/docs/about/glossary#action-id)).
+The action ID (also called "external nullifier") makes sure that the proof your contract receives was generated for it. We recommend generating Action IDs on the [Developer Portal](https://developer.worldcoin.org) (more on [Action IDs](https://id.worldcoin.org/about/glossary#action-id)).
 
 > Note: Make sure you're passing the correct Action ID when initializing the JS widget! The generated proof will be invalid otherwise.
 
@@ -30,9 +30,9 @@ If your use-case doesn't require uniqueness, you can use them as "anonymous iden
 
 ## Advanced: Supporting multiple actions
 
-The external nullifier makes sure that the proof your contract receives was generated for it, and not for a different contract using the same signal. Unless your use-case requires users to perform more than one WorldID action (claiming multiple airdrops that live in the same contract, for example, instead of a single one), you should use an Action ID, which you can obtain from the [WorldID Dev Portal](https://developer.worldcoin.org).
+The external nullifier makes sure that the proof your contract receives was generated for it, and not for a different contract using the same signal. Unless your use case requires users to perform more than one World ID action (claiming multiple airdrops that live in the same contract, for example, instead of a single one), you should use one Action ID, which you can obtain from the [Developer Portal](https://developer.worldcoin.org).
 
-For advanced use-cases, you can add additional arguments to the `abi.encodePacked` call to differentiate between actions, like so:
+For advanced use cases, you can add additional arguments to the `abi.encodePacked` call to differentiate between actions, like so:
 
 ```solidity
 function claimAirdrop(
@@ -64,11 +64,11 @@ function claimAirdrop(
 
 2. Use the [JS widget](https://id.worldcoin.org/docs/js) to prompt the user with verification (make sure you're providing the correct [signal](#setting-your-signal) and [action ID](#setting-your-action-id)). Upon acceptance, you'll get a `merkle_root`, `nullifier_hash` and `proof`.
 
-3. The ZKP (attribute `proof`) is a `uint256[8]` array and your smart contract expects it that way. For easier handling, the JS widget will return the proof encoded. Unpack your proof before sending it to your smart contract. 
+3. The ZKP (attribute `proof`) is a `uint256[8]` array and your smart contract expects it that way. For easier handling, the JS widget will return the proof encoded. Unpack your proof before sending it to your smart contract.
 
 ```js
-import { defaultAbiCoder as abi } from "@ethers/utils";
-const unpackedProof = abi.decode(["uint256[8]"], proof)[0];
+import { defaultAbiCoder as abi } from '@ethers/utils'
+const unpackedProof = abi.decode(['uint256[8]'], proof)[0]
 // You can now pass your unpackedProof to your smart contract
 ```
 
