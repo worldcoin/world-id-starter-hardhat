@@ -10,6 +10,8 @@ import {
     setUpWorldID,
 } from './helpers/InteractsWithWorldID'
 
+const ACTION_ID = 'wid_test_1234'
+
 describe('Contract', function () {
     let Contract: Contract
     let callerAddr: string
@@ -22,7 +24,7 @@ describe('Contract', function () {
         const [signer] = await ethers.getSigners()
         const worldIDAddress = await setUpWorldID()
         const ContractFactory = await ethers.getContractFactory('Contract')
-        Contract = await ContractFactory.deploy(worldIDAddress)
+        Contract = await ContractFactory.deploy(worldIDAddress, ACTION_ID)
         await Contract.deployed()
 
         callerAddr = await signer.getAddress()
@@ -31,7 +33,7 @@ describe('Contract', function () {
     it('Accepts and validates calls', async function () {
         await registerIdentity()
 
-        const [nullifierHash, proof] = await getProof(Contract.address, callerAddr)
+        const [nullifierHash, proof] = await getProof(ACTION_ID, callerAddr)
 
         const tx = await Contract.verifyAndExecute(
             callerAddr,
@@ -48,7 +50,7 @@ describe('Contract', function () {
     it('Rejects duplicated calls', async function () {
         await registerIdentity()
 
-        const [nullifierHash, proof] = await getProof(Contract.address, callerAddr)
+        const [nullifierHash, proof] = await getProof(ACTION_ID, callerAddr)
 
         const tx = await Contract.verifyAndExecute(
             callerAddr,
@@ -68,7 +70,7 @@ describe('Contract', function () {
     it('Rejects calls from non-members', async function () {
         await registerInvalidIdentity()
 
-        const [nullifierHash, proof] = await getProof(Contract.address, callerAddr)
+        const [nullifierHash, proof] = await getProof(ACTION_ID, callerAddr)
 
         await expect(
             Contract.verifyAndExecute(callerAddr, await getRoot(), nullifierHash, proof)
@@ -79,7 +81,7 @@ describe('Contract', function () {
     it('Rejects calls with an invalid signal', async function () {
         await registerIdentity()
 
-        const [nullifierHash, proof] = await getProof(Contract.address, callerAddr)
+        const [nullifierHash, proof] = await getProof(ACTION_ID, callerAddr)
 
         await expect(
             Contract.verifyAndExecute(Contract.address, await getRoot(), nullifierHash, proof)
@@ -90,7 +92,7 @@ describe('Contract', function () {
     it('Rejects calls with an invalid proof', async function () {
         await registerIdentity()
 
-        const [nullifierHash, proof] = await getProof(Contract.address, callerAddr)
+        const [nullifierHash, proof] = await getProof(ACTION_ID, callerAddr)
         proof[0] = (BigInt(proof[0]) ^ BigInt(42)).toString()
 
         await expect(

@@ -9,6 +9,7 @@ import {
     MerkleProof,
     SemaphoreSolidityProof,
 } from '@zk-kit/protocols'
+import { solidityPack as pack } from 'ethers/lib/utils'
 
 let semaphoreLibAddr: string
 let WorldId: Contract
@@ -53,8 +54,8 @@ export const getProof = async (
         identity.getTrapdoor(),
         identity.getNullifier(),
         generateMerkleProof(20, BigInt(0), [identityCommitment], identityCommitment),
-        hashBytes(externalNullifier),
-        // update here if changing the signal (you might need to wrap in a `pack()` call if multiple arguments)
+        hashBytes(pack(['string'], [externalNullifier])),
+        // update here if changing the signal (you might need to wrap in a `pack()` call if there are multiple arguments), see above
         signal
     )
 
