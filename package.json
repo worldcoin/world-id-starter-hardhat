@@ -40,7 +40,7 @@
         "@zk-kit/protocols": "^1.11.1",
         "circomlibjs": "^0.1.7",
         "download": "^8.0.0",
-        "patch-package": "^6.4.7"
+        "patch-package": "^6.5.0"
     },
     "engines": {
         "node": ">=10.4.0"
