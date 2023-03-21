@@ -36,7 +36,7 @@ contract Contract {
     /// @param input User's input, used as the signal. Could be something else! (see README)
     /// @param root The of the Merkle tree, returned by the SDK.
     /// @param nullifierHash The nullifier for this proof, preventing double signaling, returned by the SDK.
-    /// @param proof The zero knowledge proof that demostrates the claimer is registered with World ID, returned by the SDK.
+    /// @param proof The zero knowledge proof that demonstrates the claimer is registered with World ID, returned by the SDK.
     /// @dev Feel free to rename this method however you want! We've used `claim`, `verify` or `execute` in the past.
     function verifyAndExecute(
         address input,
