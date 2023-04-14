@@ -44,7 +44,8 @@ export const getRoot = async (): Promise<BigInt> => {
 }
 
 export const getProof = async (
-    externalNullifier: string,
+    appId: string,
+    action: string,
     signal: string
 ): Promise<[StrBigInt, SemaphoreSolidityProof]> => {
     const identity = new ZkIdentity(Strategy.MESSAGE, 'test-identity')
@@ -54,7 +55,7 @@ export const getProof = async (
         identity.getTrapdoor(),
         identity.getNullifier(),
         generateMerkleProof(20, BigInt(0), [identityCommitment], identityCommitment),
-        hashBytes(pack(['string'], [externalNullifier])),
+        hashBytes(pack(['uint256', 'string'], [hashBytes(pack(['string'], [appId])), action])),
         // update here if changing the signal (you might need to wrap in a `pack()` call if there are multiple arguments), see above
         signal
     )

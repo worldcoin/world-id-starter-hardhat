@@ -12,7 +12,8 @@
             "files": "*.sol",
             "options": {
                 "explicitTypes": "always",
-                "compiler": "0.8.12"
+                "compiler": "0.8.12",
+                "singleQuote": false
             }
         }
     ]
