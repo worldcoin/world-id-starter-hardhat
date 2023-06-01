@@ -3,4 +3,5 @@ node_modules
 artifacts
 cache
 coverage*
+pnpm-lock.yaml
 gasReporterOutput.json
