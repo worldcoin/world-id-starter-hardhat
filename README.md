@@ -10,13 +10,13 @@ Start with the `verifyAndExecute` function on the [`Contract.sol`](contracts/Con
 
 ### Setting your Action ID
 
-The action ID (also called "external nullifier") makes sure that the proof your contract receives was generated for it. We recommend generating Action IDs on the [Developer Portal](https://developer.worldcoin.org) (more on [Action IDs](https://id.worldcoin.org/about/glossary#action-id)).
+The action ID (also called "external nullifier") makes sure that the proof your contract receives was generated for it. We recommend generating Action IDs on the [Developer Portal](https://developer.worldcoin.org) (more on [Action IDs](https://docs.worldcoin.org/id/anonymous-actions)).
 
 > Note: Make sure you're passing the correct Action ID when initializing the JS widget! The generated proof will be invalid otherwise.
 
 ### Setting your signal
 
-The signal adds an additional layer of protection to the World ID ZKP, it makes sure that the input provided to the contract is the one the person who generated the proof intended (more on [signals](https://id.worldcoin.org/docs/about/glossary#signal)). By default this contract expects an address (`receiver`), but you can update it to be any arbitrary string.
+The signal adds an additional layer of protection to the World ID ZKP, it makes sure that the input provided to the contract is the one the person who generated the proof intended (more on [signals](https://docs.worldcoin.org/advanced/on-chain)). By default this contract expects an address (`receiver`), but you can update it to be any arbitrary string.
 
 To update the signal, you should change the `input` on the `abi.encodePacked(input).hashToField()` line. You should provide the exact same string when initializing the JS widget, to make sure the proof includes them.
 
@@ -60,9 +60,9 @@ function claimAirdrop(
 
 ## 🗝 Usage instructions
 
-1. End users will need a verified identity, which can be obtained through our [Simulator](https://simulator.worldcoin.org) ([see docs for more info](https://id.worldcoin.org/test)). In production, this would be obtained by verifying with an orb.
+1. End users will need a verified identity, which can be obtained through our [Simulator](https://simulator.worldcoin.org) ([see docs for more info](https://docs.worldcoin.org/try)). In production, this would be obtained by verifying with an orb.
 
-2. Use the [JS widget](https://id.worldcoin.org/docs/js) to prompt the user with verification (make sure you're providing the correct [signal](#setting-your-signal) and [action ID](#setting-your-action-id)). Upon acceptance, you'll get a `merkle_root`, `nullifier_hash` and `proof`.
+2. Use the [JS widget](https://docs.worldcoin.org/idkit) to prompt the user with verification (make sure you're providing the correct [signal](#setting-your-signal) and [action ID](#setting-your-action-id)). Upon acceptance, you'll get a `merkle_root`, `nullifier_hash` and `proof`.
 
 3. The ZKP (attribute `proof`) is a `uint256[8]` array and your smart contract expects it that way. For easier handling, the JS widget will return the proof encoded. Unpack your proof before sending it to your smart contract.
 
@@ -76,17 +76,9 @@ const unpackedProof = abi.decode(['uint256[8]'], proof)[0]
 
 ## 🧑‍💻 Development & testing
 
-This repository uses the [Hardhat](https://hardhat.org) smart contract toolkit. You'll also need [Node.js](https://nodejs.org) v14 in order to build, run the tests and deploy your contract.
+This repository uses the [Hardhat](https://hardhat.org) smart contract toolkit. You'll also need [Node.js](https://nodejs.org) v14 in order to build, and deploy your contract.
 
-Once you have node installed, you can run `npm install` from the base directory to install all dependencies, and run the automated tests with `npm run test`.
-
-### Running the test suite
-
-This repository includes automated tests, which you can use to make sure your contract is working as expected before deploying it. Of course, any modifications you've made to the `Contract.sol` file will need to be reflected on the tests as well to make them work.
-
-If you've changed the type of the external nullifier, or the signal, you should look over the `src/test/helpers/InteractsWithWorldID.ts` file and update them there as well.
-
-Once you've done this, you can run the tests with `npm run test`.
+Once you have node installed, you can run `pnpm install` from the base directory to install all dependencies.
 
 <!-- WORLD-ID-SHARED-README-TAG:START - Do not remove or modify this section directly -->
 <!-- The contents of this file are inserted to all World ID repositories to provide general context on World ID. -->

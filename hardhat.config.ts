@@ -36,12 +36,6 @@ const config: HardhatUserConfig = {
     etherscan: {
         apiKey: process.env.ETHERSCAN_API_KEY,
     },
-    dependencyCompiler: {
-        paths: [
-            '@appliedzkp/semaphore-contracts/base/Verifier.sol',
-            '@worldcoin/world-id-contracts/src/Semaphore.sol',
-        ],
-    },
 }
 
 export default config
